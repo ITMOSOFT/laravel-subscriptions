@@ -14,3 +14,9 @@ git push origin v1.0.0
 ```
 
 Create the GitHub Release and submit `itmosoft/laravel-subscriptions` to Packagist with its GitHub webhook. Do not publish before CI passes.
+
+## v1.0.1
+Title: `v1.0.1 — Fix Subscription Test Subscriber Fixture`
+
+- Fix the shared test fixture to retain the persisted subscriber model, preventing null subscriber IDs in the subscription lifecycle tests.
+- No runtime package behavior changed.
