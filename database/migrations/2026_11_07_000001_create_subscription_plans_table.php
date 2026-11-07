@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration { public function up():void {$p=config('subscriptions.table_prefix','itmosoft_');Schema::create($p.'subscription_plans',function(Blueprint $t){$t->id();$t->string('name');$t->string('slug')->unique();$t->unsignedBigInteger('amount');$t->char('currency',3);$t->string('interval',16);$t->unsignedSmallInteger('interval_count')->default(1);$t->boolean('is_active')->default(true);$t->json('metadata')->nullable();$t->timestamps();});} public function down():void {$p=config('subscriptions.table_prefix','itmosoft_');Schema::dropIfExists($p.'subscription_plans');} };

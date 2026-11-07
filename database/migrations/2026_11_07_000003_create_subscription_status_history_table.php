@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration { public function up():void {$p=config('subscriptions.table_prefix','itmosoft_');Schema::create($p.'subscription_status_history',function(Blueprint $t)use($p){$t->id();$t->foreignId('subscription_id')->constrained($p.'subscriptions')->cascadeOnDelete();$t->string('from_status',24)->nullable();$t->string('to_status',24);$t->json('context')->nullable();$t->timestamp('created_at');});} public function down():void {$p=config('subscriptions.table_prefix','itmosoft_');Schema::dropIfExists($p.'subscription_status_history');} };
