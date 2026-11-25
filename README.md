@@ -3,8 +3,8 @@
 Gateway-agnostic subscription lifecycle primitives for Laravel 12 and 13.
 
 ## Features
-- Subscription plans with amount (integer minor units), currency, interval and interval count.
-- Polymorphic subscribers.
+- Subscription plans with amount in integer minor currency units, currency, interval and interval count.
+- Persisted polymorphic subscribers.
 - Trial, active, paused and cancelled states.
 - Start, renew, pause, resume and immediate cancellation operations.
 - Status history and configurable database table prefix.
@@ -31,11 +31,15 @@ $plan = SubscriptionPlan::create([
 $subscription = app(SubscriptionManager::class)->start($user, $plan, now()->addDays(14));
 ```
 
-Renew only after the integrating application confirms successful payment. Schedule renewal work in the host application and use distributed locking plus gateway idempotency. v1.0.0 cancellation is immediate; no proration, grace periods, metered billing, dunning, tax or payment collection is included.
+Plans require a persisted record, a non-negative integer amount in minor units, a three-letter currency code, and an interval of `day`, `week`, `month`, or `year` with a positive interval count. Subscribers must be persisted Eloquent models. A supplied trial end must be in the future.
+
+Lifecycle operations reload and lock the subscription row before checking its current status. Resuming uses the period end from the locked database row, not potentially stale attributes on the model passed by the caller. Each successful status change is recorded in status history within the same transaction.
+
+Renew only after the integrating application confirms successful payment. Schedule renewal work in the host application and use distributed locking plus gateway idempotency. Cancellation is immediate; no proration, grace periods, metered billing, dunning, tax or payment collection is included.
 
 ## Test
 ```bash
+composer validate --strict
 composer install
 composer test
 ```
-GitHub Actions runs `composer test` for Laravel 12 and 13; failed PHPUnit tests fail the job.
